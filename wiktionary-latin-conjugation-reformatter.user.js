@@ -50,6 +50,9 @@
             background-color: #eaecf0;
             border-bottom: 1px solid #a2a9b1;
         }
+        .wikt-reformat-header-standalone {
+            border-bottom: none;
+        }
         .wikt-reformat-title {
             font-size: 1.2em;
             font-weight: bold;
@@ -419,16 +422,35 @@
         return group;
     }
 
+    /**
+     * Sets up toggle functionality between original and reformatted views.
+     * Creates a persistent header with toggle button that remains visible regardless of active view.
+     * @param {HTMLElement} originalView - The original Wiktionary conjugation table
+     * @param {HTMLElement} newView - The reformatted conjugation view
+     */
     function setupToggle(originalView, newView) {
+        // Create a separate container for the toggle header that stays visible
+        const toggleContainer = document.createElement('div');
+        toggleContainer.className = 'wikt-reformat-container';
+        
         const headerDiv = document.createElement('div');
-        headerDiv.className = 'wikt-reformat-header';
+        headerDiv.className = 'wikt-reformat-header wikt-reformat-header-standalone';
         const titleSpan = document.createElement('span');
         titleSpan.className = 'wikt-reformat-title';
         titleSpan.textContent = 'Latin Conjugation';
         const toggleButton = document.createElement('button');
         toggleButton.className = 'wikt-reformat-toggle-btn';
         headerDiv.append(titleSpan, toggleButton);
-        newView.insertBefore(headerDiv, newView.firstChild);
+        toggleContainer.appendChild(headerDiv);
+        
+        // Insert the toggle container before the new view
+        newView.parentNode.insertBefore(toggleContainer, newView);
+        
+        // Remove the header styling from the new view since it's now separate
+        const existingHeader = newView.querySelector('.wikt-reformat-header');
+        if (existingHeader) {
+            existingHeader.remove();
+        }
 
         let isNewViewVisible = GM_getValue('isNewViewVisible', IS_NEW_VIEW_DEFAULT);
         console.log(getPrefix(), `Initial view state loaded: ${isNewViewVisible ? 'Improved' : 'Original'}`);
