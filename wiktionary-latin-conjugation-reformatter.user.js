@@ -269,6 +269,7 @@
 
             // Process voice and tense information
             if (headers.length >= 2) {
+                // Row with voice + tense (e.g., "active" + "present")
                 const voiceHeader = headers[0].textContent.trim().toLowerCase();
                 if (voiceHeader === 'active' || voiceHeader === 'passive') {
                     currentVoice = voiceHeader;
@@ -278,7 +279,19 @@
                 const tenseHeader = headers[1].textContent.trim().toLowerCase()
                     .replace(/\s+/g, '')
                     .replace(/&nbsp;/g, '');
+                console.log(getPrefix(), `Row ${index}: Parsed tense header: "${tenseHeader}" from "${headers[1].textContent}"`);
                 if (currentMood && currentVoice && data[currentMood]?.[currentVoice] && tenseHeader) {
+                    const forms = extractForms(row.querySelectorAll('td'));
+                    data[currentMood][currentVoice][tenseHeader] = forms;
+                    console.log(getPrefix(), `Row ${index}: Stored ${Object.keys(forms).length} forms for ${currentMood}.${currentVoice}.${tenseHeader}`);
+                }
+            } else if (headers.length === 1 && currentMood && currentVoice) {
+                // Row with only tense (e.g., "imperfect", "future", "perfect")
+                const tenseHeader = headers[0].textContent.trim().toLowerCase()
+                    .replace(/\s+/g, '')
+                    .replace(/&nbsp;/g, '');
+                console.log(getPrefix(), `Row ${index}: Parsed tense header: "${tenseHeader}" from "${headers[0].textContent}"`);
+                if (data[currentMood]?.[currentVoice] && tenseHeader) {
                     const forms = extractForms(row.querySelectorAll('td'));
                     data[currentMood][currentVoice][tenseHeader] = forms;
                     console.log(getPrefix(), `Row ${index}: Stored ${Object.keys(forms).length} forms for ${currentMood}.${currentVoice}.${tenseHeader}`);
