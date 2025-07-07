@@ -287,6 +287,8 @@
         });
         
         console.log(getPrefix(), "Parsing complete. Final data structure:", data);
+        // log stringified data for debugging
+        console.log(getPrefix(), "Stringified Final data structure:", JSON.stringify(data));
         return data;
     }
 
