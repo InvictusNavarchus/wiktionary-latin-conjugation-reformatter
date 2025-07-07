@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         Wiktionary Latin Conjugation Reformatter
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/InvictusNavarchus/
+// @updateURL    https://raw.githubusercontent.com/InvictusNavarchus/wiktionary-latin-conjugation-reformatter/master/wiktionary-latin-conjugation-reformatter.user.js
+// @downloadURL  https://raw.githubusercontent.com/InvictusNavarchus/wiktionary-latin-conjugation-reformatter/master/wiktionary-latin-conjugation-reformatter.user.js
 // @version      0.1.0
 // @description  Transforms the cluttered Wiktionary Latin conjugation table into a more readable, spacious format.
-// @author       Gemini
+// @author       Invictus Navarchus
 // @match        https://en.wiktionary.org/wiki/*
 // @grant        GM_addStyle
 // @grant        GM_getValue
