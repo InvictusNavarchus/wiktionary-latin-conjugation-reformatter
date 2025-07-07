@@ -336,7 +336,9 @@
         const persons = ['1s', '2s', '3s', '1p', '2p', '3p'];
         Array.from(cells).forEach((cell, index) => {
             if (index < persons.length && cell.innerHTML.trim() !== '—') {
-                forms[persons[index]] = cell.innerHTML;
+                // Remove <br> tags and replace with a single space
+                const cleanedHTML = cell.innerHTML.replace(/<br\s*\/?>/gi, ' ');
+                forms[persons[index]] = cleanedHTML;
             }
         });
         console.log(getPrefix(), `Extracted forms: ${Object.keys(forms).join(', ')}`);
@@ -350,18 +352,18 @@
         if (!tense) return;
 
         if (headers.length === 2 && cells.length === 4) { // Infinitive, Participle
-            nonFiniteData.infinitive[tense + 'Active'] = cells[0].innerHTML;
-            nonFiniteData.infinitive[tense + 'Passive'] = cells[1].innerHTML;
-            nonFiniteData.participle[tense + 'Active'] = cells[2].innerHTML;
-            nonFiniteData.participle[tense + 'Passive'] = cells[3].innerHTML;
+            nonFiniteData.infinitive[tense + 'Active'] = cells[0].innerHTML.replace(/<br\s*\/?>/gi, ' ');
+            nonFiniteData.infinitive[tense + 'Passive'] = cells[1].innerHTML.replace(/<br\s*\/?>/gi, ' ');
+            nonFiniteData.participle[tense + 'Active'] = cells[2].innerHTML.replace(/<br\s*\/?>/gi, ' ');
+            nonFiniteData.participle[tense + 'Passive'] = cells[3].innerHTML.replace(/<br\s*\/?>/gi, ' ');
         } else if (headers.length === 3 && cells.length === 4) { // Gerund
-            nonFiniteData.gerund.genitive = cells[0].innerHTML;
-            nonFiniteData.gerund.dative = cells[1].innerHTML;
-            nonFiniteData.gerund.accusative = cells[2].innerHTML;
-            nonFiniteData.gerund.ablative = cells[3].innerHTML;
+            nonFiniteData.gerund.genitive = cells[0].innerHTML.replace(/<br\s*\/?>/gi, ' ');
+            nonFiniteData.gerund.dative = cells[1].innerHTML.replace(/<br\s*\/?>/gi, ' ');
+            nonFiniteData.gerund.accusative = cells[2].innerHTML.replace(/<br\s*\/?>/gi, ' ');
+            nonFiniteData.gerund.ablative = cells[3].innerHTML.replace(/<br\s*\/?>/gi, ' ');
         } else if (headers.length === 3 && cells.length === 2) { // Supine
-            nonFiniteData.supine.accusative = cells[0].innerHTML;
-            nonFiniteData.supine.ablative = cells[1].innerHTML;
+            nonFiniteData.supine.accusative = cells[0].innerHTML.replace(/<br\s*\/?>/gi, ' ');
+            nonFiniteData.supine.ablative = cells[1].innerHTML.replace(/<br\s*\/?>/gi, ' ');
         }
     }
 
