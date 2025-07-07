@@ -78,6 +78,27 @@
         }
         .wikt-reformat-mood-container {
             display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .wikt-reformat-voice-section {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .wikt-reformat-voice-header {
+            background-color: #2980b9;
+            color: white;
+            padding: 8px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 1.1em;
+        }
+        .wikt-reformat-voice-columns {
+            display: flex;
             gap: 20px;
             flex-wrap: wrap;
         }
@@ -387,27 +408,63 @@
         const container = document.createElement('div');
         container.className = 'wikt-reformat-mood-container';
 
-        // Active Voice Column
-        const activeCol = document.createElement('div');
-        activeCol.className = 'wikt-reformat-column';
-        activeCol.appendChild(createTenseTable('PRESENT ACTIVE', moodData.active.present));
-        activeCol.appendChild(createTenseTable('IMPERFECT ACTIVE', moodData.active.imperfect));
-        activeCol.appendChild(createTenseTable('FUTURE ACTIVE', moodData.active.future));
-        activeCol.appendChild(createTenseTable('PERFECT ACTIVE', moodData.active.perfect));
-        activeCol.appendChild(createTenseTable('PLUPERFECT ACTIVE', moodData.active.pluperfect));
-        activeCol.appendChild(createTenseTable('FUTURE PERFECT ACTIVE', moodData.active.futureperfect));
-        container.appendChild(activeCol);
+        // Active Voice Section
+        const activeSection = document.createElement('div');
+        activeSection.className = 'wikt-reformat-voice-section';
+        
+        const activeHeader = document.createElement('div');
+        activeHeader.className = 'wikt-reformat-voice-header';
+        activeHeader.textContent = 'ACTIVE';
+        activeSection.appendChild(activeHeader);
+        
+        const activeColumns = document.createElement('div');
+        activeColumns.className = 'wikt-reformat-voice-columns';
+        
+        const activeCol1 = document.createElement('div');
+        activeCol1.className = 'wikt-reformat-column';
+        activeCol1.appendChild(createTenseTable('PRESENT', moodData.active.present));
+        activeCol1.appendChild(createTenseTable('IMPERFECT', moodData.active.imperfect));
+        activeCol1.appendChild(createTenseTable('FUTURE', moodData.active.future));
+        
+        const activeCol2 = document.createElement('div');
+        activeCol2.className = 'wikt-reformat-column';
+        activeCol2.appendChild(createTenseTable('PERFECT', moodData.active.perfect));
+        activeCol2.appendChild(createTenseTable('PLUPERFECT', moodData.active.pluperfect));
+        activeCol2.appendChild(createTenseTable('FUTURE PERFECT', moodData.active.futureperfect));
+        
+        activeColumns.appendChild(activeCol1);
+        activeColumns.appendChild(activeCol2);
+        activeSection.appendChild(activeColumns);
+        container.appendChild(activeSection);
 
-        // Passive Voice Column
-        const passiveCol = document.createElement('div');
-        passiveCol.className = 'wikt-reformat-column';
-        passiveCol.appendChild(createTenseTable('PRESENT PASSIVE', moodData.passive.present));
-        passiveCol.appendChild(createTenseTable('IMPERFECT PASSIVE', moodData.passive.imperfect));
-        passiveCol.appendChild(createTenseTable('FUTURE PASSIVE', moodData.passive.future));
-        passiveCol.appendChild(createTenseTable('PERFECT PASSIVE', moodData.passive.perfect));
-        passiveCol.appendChild(createTenseTable('PLUPERFECT PASSIVE', moodData.passive.pluperfect));
-        passiveCol.appendChild(createTenseTable('FUTURE PERFECT PASSIVE', moodData.passive.futureperfect));
-        if (passiveCol.hasChildNodes()) container.appendChild(passiveCol);
+        // Passive Voice Section
+        const passiveSection = document.createElement('div');
+        passiveSection.className = 'wikt-reformat-voice-section';
+        
+        const passiveHeader = document.createElement('div');
+        passiveHeader.className = 'wikt-reformat-voice-header';
+        passiveHeader.textContent = 'PASSIVE';
+        passiveSection.appendChild(passiveHeader);
+        
+        const passiveColumns = document.createElement('div');
+        passiveColumns.className = 'wikt-reformat-voice-columns';
+        
+        const passiveCol1 = document.createElement('div');
+        passiveCol1.className = 'wikt-reformat-column';
+        passiveCol1.appendChild(createTenseTable('PRESENT', moodData.passive.present));
+        passiveCol1.appendChild(createTenseTable('IMPERFECT', moodData.passive.imperfect));
+        passiveCol1.appendChild(createTenseTable('FUTURE', moodData.passive.future));
+        
+        const passiveCol2 = document.createElement('div');
+        passiveCol2.className = 'wikt-reformat-column';
+        passiveCol2.appendChild(createTenseTable('PERFECT', moodData.passive.perfect));
+        passiveCol2.appendChild(createTenseTable('PLUPERFECT', moodData.passive.pluperfect));
+        passiveCol2.appendChild(createTenseTable('FUTURE PERFECT', moodData.passive.futureperfect));
+        
+        passiveColumns.appendChild(passiveCol1);
+        passiveColumns.appendChild(passiveCol2);
+        passiveSection.appendChild(passiveColumns);
+        container.appendChild(passiveSection);
 
         section.appendChild(container);
         return section;
