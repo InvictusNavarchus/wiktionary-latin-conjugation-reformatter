@@ -220,6 +220,11 @@
         setupToggle(originalContainer, newTableContainer);
     }
 
+    /**
+     * Parses the Wiktionary conjugation table and extracts conjugation data.
+     * @param {HTMLElement} table - The conjugation table element
+     * @returns {Object} Parsed conjugation data organized by mood, voice, and tense
+     */
     function parseWiktionaryTable(table) {
         const data = {
             indicative: { active: {}, passive: {} },
@@ -232,38 +237,73 @@
         const rows = Array.from(table.querySelectorAll('tbody > tr'));
         let currentMood = '', currentVoice = '';
 
-        rows.forEach(row => {
+        console.log(getPrefix(), `Processing ${rows.length} table rows...`);
+
+        rows.forEach((row, index) => {
             const headers = Array.from(row.querySelectorAll('th'));
-            if (headers.length === 0) return;
+            console.log(getPrefix(), `Row ${index}: ${headers.length} headers, mood: ${currentMood}, voice: ${currentVoice}`);
+            
+            // Skip rows with no headers and no current context
+            if (headers.length === 0) {
+                console.log(getPrefix(), `Row ${index}: Skipping - no headers and no context`);
+                return;
+            }
 
             const firstHeaderClass = headers[0].className;
-            if (firstHeaderClass.includes('roa-indicative-left-rail')) currentMood = 'indicative';
-            else if (firstHeaderClass.includes('roa-subjunctive-left-rail')) currentMood = 'subjunctive';
-            else if (firstHeaderClass.includes('roa-imperative-left-rail')) currentMood = 'imperative';
-            else if (firstHeaderClass.includes('roa-nonfinite-header')) {
+            
+            // Check for mood changes
+            if (firstHeaderClass.includes('roa-indicative-left-rail')) {
+                currentMood = 'indicative';
+                console.log(getPrefix(), `Row ${index}: Set mood to indicative`);
+            } else if (firstHeaderClass.includes('roa-subjunctive-left-rail')) {
+                currentMood = 'subjunctive';
+                console.log(getPrefix(), `Row ${index}: Set mood to subjunctive`);
+            } else if (firstHeaderClass.includes('roa-imperative-left-rail')) {
+                currentMood = 'imperative';
+                console.log(getPrefix(), `Row ${index}: Set mood to imperative`);
+            } else if (firstHeaderClass.includes('roa-nonfinite-header')) {
+                console.log(getPrefix(), `Row ${index}: Processing non-finite forms`);
                 handleNonFinite(row, data.nonFinite);
                 return;
             }
 
-            if (headers.length > 1) {
+            // Process voice and tense information
+            if (headers.length >= 2) {
                 const voiceHeader = headers[0].textContent.trim().toLowerCase();
-                if (voiceHeader === 'active' || voiceHeader === 'passive') currentVoice = voiceHeader;
+                if (voiceHeader === 'active' || voiceHeader === 'passive') {
+                    currentVoice = voiceHeader;
+                    console.log(getPrefix(), `Row ${index}: Set voice to ${currentVoice}`);
+                }
 
-                const tenseHeader = headers[1].textContent.trim().toLowerCase().replace(/\s+/g, '');
-                if (data[currentMood]?.[currentVoice]) {
-                    data[currentMood][currentVoice][tenseHeader] = extractForms(row.querySelectorAll('td'));
+                const tenseHeader = headers[1].textContent.trim().toLowerCase()
+                    .replace(/\s+/g, '')
+                    .replace(/&nbsp;/g, '');
+                if (currentMood && currentVoice && data[currentMood]?.[currentVoice] && tenseHeader) {
+                    const forms = extractForms(row.querySelectorAll('td'));
+                    data[currentMood][currentVoice][tenseHeader] = forms;
+                    console.log(getPrefix(), `Row ${index}: Stored ${Object.keys(forms).length} forms for ${currentMood}.${currentVoice}.${tenseHeader}`);
                 }
             }
         });
+        
+        console.log(getPrefix(), "Parsing complete. Final data structure:", data);
         return data;
     }
 
+    /**
+     * Extracts verb forms from table cells and maps them to person/number combinations.
+     * @param {NodeList} cells - The table cells containing verb forms
+     * @returns {Object} Object mapping person/number to verb forms
+     */
     function extractForms(cells) {
         const forms = {};
         const persons = ['1s', '2s', '3s', '1p', '2p', '3p'];
         Array.from(cells).forEach((cell, index) => {
-            if (cell.innerHTML.trim() !== '—') forms[persons[index]] = cell.innerHTML;
+            if (index < persons.length && cell.innerHTML.trim() !== '—') {
+                forms[persons[index]] = cell.innerHTML;
+            }
         });
+        console.log(getPrefix(), `Extracted forms: ${Object.keys(forms).join(', ')}`);
         return forms;
     }
 
